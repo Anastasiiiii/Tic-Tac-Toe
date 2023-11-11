@@ -6,20 +6,45 @@ import Log from "./components/Log";
 
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
-const [activePlayer, setActivePlayer] = useState('X');
-function handleSelectSquare() {
-  setActivePlayer((curActivePlayer) => curActivePlayer === 'X' ? 'O' : 'X');
-  setGameTurns();
-}
+  const [activePlayer, setActivePlayer] = useState("X");
+
+  function handleSelectSquare(rowIndex, colIndex) {
+    setActivePlayer((curActivePlayer) => (curActivePlayer === "X" ? "O" : "X"));
+    setGameTurns((prevTurns) => {
+      let currentPlayer = "X";
+
+      if (prevTurns.length > 0 && prevTurns[0].player === "X") {
+        currentPlayer = "O";
+      }
+
+      const updatedTurns = [
+        { square: { row: rowIndex, col: colIndex }, player: activePlayer },
+        ...prevTurns,
+      ];
+
+      return updatedTurns;
+    });
+  }
 
   return (
     <main>
       <div id="game-container">
         <ol id="players" className="highlight-player">
-        <Player initialNname = "Player 1" symbol="X" isActive={activePlayer === 'X'} />
-        <Player initialNname = "Player 2" symbol="O" isActive={activePlayer === 'O'} />
+          <Player
+            initialNname="Player 1"
+            symbol="X"
+            isActive={activePlayer === "X"}
+          />
+          <Player
+            initialNname="Player 2"
+            symbol="O"
+            isActive={activePlayer === "O"}
+          />
         </ol>
-        <GameBoard onSelectSquare={handleSelectSquare} activePlayerSymbol={activePlayer} />
+        <GameBoard
+          onSelectSquare={handleSelectSquare}
+          activePlayerSymbol={activePlayer}
+        />
       </div>
       <Log />
     </main>
